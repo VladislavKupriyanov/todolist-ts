@@ -15,6 +15,16 @@ export function App() {
         { id: v1(), title: "GraphQL", isDone: false }
     ]);
 
+    function addTask(title: string) {
+        let newTask = { id: v1(), title: title, isDone: false }
+        setTasks([newTask, ...tasks]);
+    };
+
+    function removeTask(id: string) {
+        let filteredTasks = tasks.filter(task => task.id !== id);
+        setTasks(filteredTasks);
+    };
+
     let [filter, setFilter] = useState<FilterValuesType>("All");
 
     let tasksForTodolist = tasks;
@@ -31,16 +41,13 @@ export function App() {
         setFilter(value);
     };
 
-    function removeTask(id: string) {
-        let filteredTasks = tasks.filter(task => task.id !== id);
-        setTasks(filteredTasks);
+    function changeStatus(taskId: string, isDone: boolean) {
+        let task = tasks.find(t => t.id === taskId);
+        if (task) {
+            task.isDone = isDone;
+        };
+        setTasks([...tasks])
     };
-
-    function addTask(title: string) {
-        let newTask = { id: v1(), title: title, isDone: false }
-        let newTasks = [newTask, ...tasks];
-        setTasks(newTasks);
-    }
 
     return (
         <div className="App">
@@ -50,6 +57,8 @@ export function App() {
                 addTask={addTask}
                 removeTask={removeTask}
                 changeFilter={changeFilter}
+                changeTaskStatus={changeStatus}
+                filter={filter}
             />
         </div>
     );
